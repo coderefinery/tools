@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
     end
     config.vm.box_check_update = true # check for updates on every time you start the machine
     config.vm.hostname = "coderefinery-basic" # set up hostname
-    config.vm.network :forwarded_port, guest: 80, host: 8888, auto_correct: true # forward virtual machine's http port to host's port 8888
+    config.vm.network :forwarded_port, guest: 80, host: 7888, auto_correct: true # forward virtual machine's http port to host's port 8888
     config.vm.provision "shell", path: "setup.sh" # run this simple setup script, you can add inline commands to this file as well
     config.vm.synced_folder "./www", "/var/www/html", type: "rsync", create: false, group: "apache", owner: "apache" # This will require Guest Additions to be installed without type "rsync". 
 end
