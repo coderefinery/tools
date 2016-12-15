@@ -1,0 +1,25 @@
+---
+
+# Example of how to make code vary of operating system
+- name: Install epel-release
+  yum:
+    name: epel-release
+    state: latest
+  when: ansible_os_family == "RedHat"
+
+# With Ansible 2.X, example of using multiple items
+# Sometimes picking up the latest version can be a brave choise
+- name: Install Python
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - python
+    - python-devel
+    - python-virtualenv
+    - python-pip
+
+# Example of using command module
+- name: Create virtual environment
+  become_user: vagrant
+  command: virtualenv "{{ python_virtualenv_dir }}" creates="{{ python_virtualenv_dir }}"

@@ -1,0 +1,10 @@
+---
+
+- hosts: coderefinery-advanced
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - "vars/common.yml"
+  roles:
+    - pythonenv
+    - pythoncode

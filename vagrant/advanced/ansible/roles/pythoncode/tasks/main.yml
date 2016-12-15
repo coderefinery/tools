@@ -1,0 +1,47 @@
+---
+# To clone repository more sanely, with git:
+#- name: Clone repository
+#  git:
+#    repo: "https://github.com/coderefinery/csvwrangler.git"
+#    dest: "/vagrant/src/"
+#    clone: yes
+#    update: yes
+
+- name: Install git
+  package:
+    name: git
+    state: latest
+
+# Example to use stat module
+- name: Check if code is already installed
+  stat:
+    path: "/vagrant/src/csvwrangler/"
+  register: cw
+
+# Stat module is now used
+- name: Get git repository, with command line
+  become_user: vagrant
+  command: "git clone https://github.com/coderefinery/csvwrangler.git /vagrant/src/csvwrangler/"
+  when: not cw.stat.exists 
+
+# Example of using Pip module, install to virtualenv
+- name: Install code
+  become_user: vagrant
+  pip:
+    name: "/vagrant/src/csvwrangler/"
+    virtualenv: "{{ python_virtualenv_dir }}"
+    virtualenv_site_packages: yes
+
+# In this setup, the setuptools is too old and was inherited upon creation of the virtualenv. Shell example to update it.
+- name: Update setuptools
+  become_user: vagrant
+  shell: "source {{ python_virtualenv_dir }}/bin/activate && pip install -U setuptools && deactivate"
+
+# Pip to install requirements
+- name: Install requirements
+  become_user: vagrant
+  pip: 
+    requirements: "/vagrant/src/csvwrangler/requirements.txt"
+    virtualenv: "{{ python_virtualenv_dir }}"
+    # virtualenv-python: pythonX.X
+

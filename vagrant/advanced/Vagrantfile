@@ -1,0 +1,20 @@
+# Simple Vagrant example
+
+Vagrant.configure("2") do |config|
+    # 2 stands for the version of the configuration object, 2 is for Vagrant 1.1+ up to 2.0.x.
+
+    config.vm.boot_timeout = 280 # default: 300
+    config.vm.define "coderefinery-advanced" do |advanced| # define virtual machine's name, beneficial especially if you have multiple instances, defaults to 'default'
+      advanced.vm.box = "centos/7" # can be a url too
+    end
+    #config.vm.box_check_update = true # check for updates on every time you start the machine
+    config.vm.hostname = "coderefinery-advanced" # set up hostname
+    config.vm.network :forwarded_port, guest: 80, host: 8889, auto_correct: true # forward virtual machine's http port to host's port 8889
+    config.vm.network "private_network", ip: "192.168.70.11"
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "ansible/playbook.yml" # run playbook
+      ansible.verbose = "v"
+    end 
+end
+
+
